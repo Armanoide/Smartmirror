@@ -1,0 +1,306 @@
+<html>
+<head>
+    <title>Enum</title>
+
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+
+    <script src="js/jquery-2.2.1.min.js" type="text/javascript"></script>
+    <script src="js/socket.io-2.0.3.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="./css/flipclock.css">
+    <script src="./js/flipclock.min.js"></script>
+    <script src="./js/modernizr.2.6.2.min.js"></script>
+    <script src="./js/polyfills.js"></script>
+</head>
+
+<body>
+<div class="component">
+
+    <div class="debug">
+        <p id="debug_position_hand_vertical"></p>
+        <p id="debug_position_hand_horizontal"></p>
+        <p id="debug_count_circle_convex"></p>
+    </div>
+    <div id="wrapper-clock">
+        <div class="clock"></div>
+    </div>
+
+    <p id="welcome-message">Hi !</p>
+    <p id="unlock-message">pass your hand to unlock</p>
+
+    <img id="no-connection" src="./img/icon_no_connection.png" width="128" height="128" />
+
+    <div id="wrapper-hand">
+        <img id="hand-red" src="./img/hand_mask_red.png" width="320" height="240" />
+        <div class="circle" style="display: none"></div>
+        <div class="circle1" style="display: none"></div>
+    </div>
+
+
+    <!-- Start Nav Structure -->
+    <button class="cn-button" id="cn-button">Menu</button>
+    <div class="cn-wrapper" id="cn-wrapper" position="-1">
+        <ul>
+            <li><a href="#"><span>Météo</span></a></li>
+            <li><a href="#"><span>Actualité</span></a></li>
+            <li><a href="#"><span>Articles</span></a></li>
+            <li><a href="#"><span>Snippets</span></a></li>
+            <li><a href="#"><span>Plugins</span></a></li>
+            <li><a href="#"><span>Contact</span></a></li>
+            <li><a href="#"><span>Follow</span></a></li>
+        </ul>
+    </div>
+    <!-- End of Nav Structure -->
+</div>
+
+
+<script type="text/javascript">
+    var clock;
+    var menuOpen = false;
+    var statusCam = "off";
+    var interval_status_motion = null;
+    var interval_in_use = null;
+    var position_hand_vertical = null;
+    var position_hand_horizontal = null;
+    var count_circle_convex = null;
+    var animationMenuEnd = true;
+    var socket;
+
+    display_status_in_use();
+
+    $(document).ready(function() {
+        clock = $('.clock').FlipClock({
+            clockFace: 'TwentyFourHourClock'
+        });
+
+        //display_status_in_use();
+        socket = io('http://localhost:3000', {transport:['websocket']});
+        socket.on('connect', function(){
+            socket.emit('get_status', {});
+        });
+
+        socket.on('count_circle_convex', function(res){
+            if (res.count_circle_convex != count_circle_convex){
+                $("#debug_count_circle_convex").text("count_circle_convex: " +res.count_circle_convex);
+            }
+            count_circle_convex = res.count_circle_convex;
+        });
+
+        socket.on('position_hand_vertical', function(res){
+            if (res.position_hand_vertical != position_hand_vertical){
+                $("#debug_position_hand_vertical").text(res.position_hand_vertical);
+            }
+            position_hand_vertical = res.position_hand_vertical;
+        });
+
+        socket.on('position_hand_horizontal', function(res){
+            if (res.position_hand_horizontal != position_hand_horizontal){
+                $("#debug_position_hand_horizontal").text(res.position_hand_horizontal);
+            }
+
+            position_hand_horizontal = res.position_hand_horizontal;
+            if (statusCam === "in_use" && menuOpen === true) {
+                if (count_circle_convex >= 4) {
+                    alert("Selectionner");
+                }
+
+                if (count_circle_convex > 2) {
+                    return
+                }
+
+                var lastPosition =   parseInt($("#cn-wrapper").attr("position"));
+                if (lastPosition === -1) {
+                    lastPosition = 1;
+                }
+                console.log("lastPosition");
+                console.log(lastPosition);
+
+                if (position_hand_horizontal === "GestureDirectionHorizontal.LEFT") {
+                    lastPosition--;
+                }
+                if (position_hand_horizontal === "GestureDirectionHorizontal.RIGHT") {
+                    lastPosition++;
+                }
+                console.log()
+                if (lastPosition < 0) {
+                    lastPosition = 1;
+                }
+                if (lastPosition > $("#cn-wrapper li").length) {
+                    lastPosition = $("#cn-wrapper li").length -1
+                }
+                console.log("after eval lastPosition");
+                console.log(lastPosition);
+
+                $("#cn-wrapper li").each(function(){
+                    $(this).removeClass('hover');
+                });
+                $("#cn-wrapper li:nth-child("+lastPosition+")").addClass('hover');
+                $("#cn-wrapper").attr('position', lastPosition);
+
+            }
+
+
+        });
+
+        socket.on('count_circle_convex', function(res){
+            count_circle_convex = res.count_circle_convex;
+        });
+
+
+        socket.on('status', function(res){
+            console.log(res);
+            if (res.status === 'HandSkinStatus.OFF') {
+                display_status_off();
+            }
+            if (res.status === 'HandSkinStatus.STANDBY') {
+                display_status_standby();
+            }
+            if (res.status === 'HandSkinStatus.RECORDING') {
+                display_status_recording();
+            }
+            if (res.status === 'HandSkinStatus.DETECTION') {
+                display_status_recording();
+            }
+            if (res.status === 'HandSkinStatus.IN_USE') {
+                console.log("statrt")
+                display_status_in_use();
+            }
+        });
+
+
+        socket.on('event', function(data){});
+        socket.on('disconnect', function(){
+
+            if (interval_status_motion) {
+                clearInterval(interval_status_motion);
+            }
+            display_no_connection();
+        });
+
+
+    });
+
+
+    function close_interval_in_use(){
+        if (interval_in_use) {
+            clearInterval(interval_in_use)
+        }
+    }
+
+    function display_status_off() {
+        statusCam = "off";
+        $('#hand-red').hide();
+        $('.circle1').hide();
+        $('.circle').hide();
+        $('#welcome-message').hide();
+        $('#unlock-message').hide();
+        $('#no-connection').hide();
+        $('#cn-button').hide();
+        close_interval_in_use();
+    }
+
+    function display_status_standby() {
+        statusCam = "stand_by";
+        $('#hand-red').show();
+        $('.circle1').hide();
+        $('.circle').hide();
+        $('#welcome-message').show();
+        $('#unlock-message').show();
+        $('#no-connection').hide();
+        $('#cn-button').hide();
+    }
+
+    function display_status_recording() {
+        statusCam = "recording";
+        $('#hand-red').hide();
+        $('.circle1').show();
+        $('.circle').show();
+        $('#welcome-message').show();
+        $('#unlock-message').hide();
+        $('#no-connection').hide();
+        $('#cn-button').hide();
+    }
+
+    function display_status_in_use() {
+        statusCam = "in_use";
+        $('#hand-red').hide();
+        $('.circle1').hide();
+        $('.circle').hide();
+        $('#welcome-message').hide();
+        $('#unlock-message').hide();
+        $('#no-connection').hide();
+        $('#cn-button').show();
+
+        interval_in_use = setInterval(function () {
+
+
+            if (position_hand_vertical
+                && position_hand_vertical === "GestureDirectionVertical.UP"
+                && animationMenuEnd === true) {
+                animationMenuEnd = false;
+                $("#cn-button").click();
+                setTimeout(function () {
+                    animationMenuEnd = true;
+                }, 2000);
+            }
+
+            /*if (menuOpen === true && position_hand_vertical
+             && position_hand_vertical === "GestureDirectionVertical.DOWN"
+             && animationMenuEnd === true) {
+             $("#cn-button").click();
+             animationMenuEnd = false;
+             setTimeout(function () {
+             animationMenuEnd = true;
+             }, 1000)
+
+             }*/
+
+        }, 500);
+
+    }
+
+    function display_no_connection() {
+        $('#no-connection').show();
+        $('#hand-red').hide();
+        $('.circle1').hide();
+        $('.circle').hide();
+        $('#welcome-message').hide();
+        $('#unlock-message').hide();
+        $('#cn-button').hide();
+
+    }
+
+
+
+
+
+    (function(){
+
+        var button = document.getElementById('cn-button'),
+            wrapper = document.getElementById('cn-wrapper');
+
+        //open and close menu when the button is clicked
+        button.addEventListener('click', handler, false);
+
+        function handler(){
+            if(!menuOpen){
+                $('#wrapper-clock').hide();
+                this.innerHTML = "Fermer";
+                classie.add(wrapper, 'opened-nav');
+            }
+            else{
+                $('#wrapper-clock').show();
+                this.innerHTML = "Menu";
+                classie.remove(wrapper, 'opened-nav');
+            }
+            menuOpen = !menuOpen;
+        }
+        function closeWrapper(){
+            classie.remove(wrapper, 'opened-nav');
+        }
+
+    })();
+
+</script>
+</body>
+</html>
