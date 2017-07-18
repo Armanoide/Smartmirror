@@ -113,8 +113,6 @@ class HandSkin(object):
             frame = bytearray(frame)
             frame = str(base64.encodestring(frame))
             frame = str(frame.encode('utf-8'))
-            if frame[2:] == "b'":
-                frame = frame[:2]
             self.socketIO.emit('set_hsv_img', {'hsv_img': frame})
 
     def set_debug(self, debug):
