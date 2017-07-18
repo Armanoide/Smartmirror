@@ -31,9 +31,9 @@ class Camera(object):
     def get_frame(self):
 
         if self.is_picamera:
-            self.camera.capture(self.rawCapture, format="bgr")
-            self.frame = self.rawCapture.array
-            pass
+            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
+                self.frame = frame.array
+                break
         else:
             ret, img = self.cap.read()
             if ret is not None:
