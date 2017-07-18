@@ -1,12 +1,9 @@
 import cv2
-import math
 from hand_skin import HandSkin
 from hand_skin import HandSkinStatus
+from camera import Camera
 from enum import Enum
 import time
-import threading
-
-ESC = 27
 
 
 class GestureDirectionHorizontal(Enum):
@@ -34,14 +31,8 @@ class GestureControl(object):
         self.width = 600
         self.height = 600
         self.socketIO = None
-
-        self.cap = cv2.VideoCapture(1)  # 1 or 0
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-
-
+        self.camera = Camera(is_picamera=False, height=self.height, width=self.width)
         self.hand_skin = HandSkin(self.width, self.height)
-        self.frame = None
         self.menu = GestureControlMenu.TO_SELECT
         self.last_center = None
         self.gesture_vertical = GestureDirectionVertical.NONE
@@ -54,20 +45,8 @@ class GestureControl(object):
         self.recording_gesture_vertical = []
         self.last_update_detect_gesture = float(time.time())
 
-    def is_cam_open(self):
-        key = cv2.waitKey(1)
-        return self.cap.isOpened() and key != ESC
-
     def close(self):
         cv2.destroyAllWindows()
-
-    def get_frame(self):
-        ret, img = self.cap.read()
-        if ret is not None:
-            img = cv2.flip(img, 1)
-            self.frame = img
-        else:
-            self.frame = None
 
     def get_average_gesture(self, tab, none_value):
         if len(self.recording_gesture_horizontal) > 0:
@@ -178,11 +157,11 @@ class GestureControl(object):
                 pass
 
     def run(self):
-        while self.is_cam_open():
-            self.get_frame()
+        while self.camera.is_cam_open():
+            self.camera.get_frame()
             self.hand_skin.socketIO = self.socketIO
             self.hand_skin.set_debug(self.DEBUG)
-            self.hand_skin.set_frame(self.frame)
+            self.hand_skin.set_frame(self.camera.frame)
             self.hand_skin.process()
             self.process()
         self.close()
