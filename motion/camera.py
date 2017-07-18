@@ -20,11 +20,12 @@ class Camera(object):
         print("is_picamera")
 
         if is_picamera:
-            time.sleep(0.1)
-            self.camera = PiCamera()
+            picamera = __import__('picamera', fromlist=[''])
+            self.camera = picamera.PiCamera()
             self.camera.resolution = (self.width, self.height)
             self.camera.framerate = 32
-            self.rawCapture = PiRGBArray(self.camera, size=(self.width, self.height))
+            self.rawCapture = picamera.PiRGBArray(self.camera, size=(self.width, self.height))
+            time.sleep(0.1)
 
         else:
             self.cap = cv2.VideoCapture(1)  # 1 or 0
