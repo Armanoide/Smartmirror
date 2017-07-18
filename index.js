@@ -59,9 +59,6 @@ io.on('connection', function (socket) {
 
     socket.on('set_hsv_img', function (data) {
         hsv_img = data.hsv_img;
-        if (hsv_img[0] === 'b') {
-            hsv_img = hsv_img.substring(2);
-        }
         socket.broadcast.emit('hsv_img', {'hsv_img': hsv_img  });
     });
 

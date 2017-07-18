@@ -111,7 +111,7 @@ class HandSkin(object):
         if self.socketIO is not None:
             frame = cv2.imencode('.jpeg', frame)[1]
             frame = bytearray(frame)
-            frame = str(base64.encodestring(frame))
+            frame = str(base64.b64encode(frame))
             frame = str(frame.encode('utf-8'))
             self.socketIO.emit('set_hsv_img', {'hsv_img': frame})
 
