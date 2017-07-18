@@ -41,9 +41,9 @@ class Camera(object):
             for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
                 self.frame = frame.array
                 num_rows, num_cols = self.frame.shape[:2]
-                rotation_matrix = cv2.getRotationMatrix2D((num_cols / 2, num_rows / 2), 30, 1)
+                rotation_matrix = cv2.getRotationMatrix2D((num_cols / 2, num_rows / 2), 90, 1)
                 self.frame = cv2.warpAffine(self.frame, rotation_matrix, (num_cols, num_rows))
-
+                self.frame = cv2.flip(self.frame, 1)
                 break
         else:
             ret, img = self.cap.read()
