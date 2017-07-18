@@ -1,9 +1,3 @@
-##########
-########## To use pi cam uncomment
-##########
-#from picamera import PiCamera
-#from picamera.array import PiRGBArray
-
 import cv2
 import time
 
