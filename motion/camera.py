@@ -21,10 +21,11 @@ class Camera(object):
 
         if is_picamera:
             picamera = __import__('picamera', fromlist=[''])
+            picameraA = __import__('picamera.array', fromlist=[''])
             self.camera = picamera.PiCamera()
             self.camera.resolution = (self.width, self.height)
             self.camera.framerate = 32
-            self.rawCapture = picamera.PiRGBArray(self.camera, size=(self.width, self.height))
+            self.rawCapture = picameraA.PiRGBArray(self.camera, size=(self.width, self.height))
             time.sleep(0.1)
 
         else:
@@ -39,6 +40,10 @@ class Camera(object):
             self.rawCapture.truncate()  # This too
             for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
                 self.frame = frame.array
+                num_rows, num_cols = self.frame.shape[:2]
+                rotation_matrix = cv2.getRotationMatrix2D((num_cols / 2, num_rows / 2), 30, 1)
+                self.frame = cv2.warpAffine(self.frame, rotation_matrix, (num_cols, num_rows))
+
                 break
         else:
             ret, img = self.cap.read()

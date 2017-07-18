@@ -59,6 +59,12 @@ io.on('connection', function (socket) {
 
     socket.on('set_hsv_img', function (data) {
         hsv_img = data.hsv_img;
+
+        //in case we have base64 b'b"/9dsfdfdsffs=''
+        if (hsv_img[0] === 'b') {
+            hsv_img = hsv_img.substring(4);
+            hsv_img = hsv_img.substring(0, hsv_img.length - 2);
+        }
         socket.broadcast.emit('hsv_img', {'hsv_img': hsv_img  });
     });
 
