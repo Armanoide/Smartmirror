@@ -182,7 +182,7 @@ class HandSkin(object):
 
         if self.status is HandSkinStatus.STANDBY:
             if self.debug_mode:
-                cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
+                cv2.circle(frame, (int(self.width / 2), int(self.height / 2)), 2, [0, 0, 255], 2)
                 #cv2.imshow("mask_hsv", frame)
                 if self.socketIO is not None:
                     str_mask_hsv = cv2.imencode('.jpeg', frame)[1]

@@ -34,6 +34,8 @@ class Camera(object):
     def get_frame(self):
 
         if self.is_picamera:
+            self.rawCapture.seek(0)  # Added these line
+            self.rawCapture.truncate()  # This too
             for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
                 self.frame = frame.array
                 break

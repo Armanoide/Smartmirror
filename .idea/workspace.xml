@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="171626f6-27c0-459e-9a18-57662ac3b548" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/motion/camera.py" afterPath="$PROJECT_DIR$/motion/camera.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/motion/gesture_control.py" afterPath="$PROJECT_DIR$/motion/gesture_control.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/motion/hand_skin.py" afterPath="$PROJECT_DIR$/motion/hand_skin.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gesture_control.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="gesture_control.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/motion/gesture_control.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="160" column="40" lean-forward="false" selection-start-line="160" selection-start-column="40" selection-end-line="160" selection-end-column="40" />
+            <state relative-caret-position="267">
+              <caret line="162" column="29" lean-forward="false" selection-start-line="162" selection-start-column="29" selection-end-line="162" selection-end-column="29" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -55,8 +55,8 @@
       <file leaf-file-name="camera.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/motion/camera.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="47" column="19" lean-forward="false" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="19" />
+            <state relative-caret-position="194">
+              <caret line="36" column="17" lean-forward="false" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
               <folding>
                 <element signature="e#128#138#0" expanded="true" />
               </folding>
@@ -64,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hand_skin.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="hand_skin.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/motion/hand_skin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-219">
-              <caret line="67" column="32" lean-forward="false" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
+            <state relative-caret-position="130">
+              <caret line="184" column="76" lean-forward="false" selection-start-line="184" selection-start-column="76" selection-end-line="184" selection-end-column="76" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -210,10 +210,10 @@
         <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/public/weather.html" />
         <option value="$PROJECT_DIR$/public/js/menu-manager.js" />
-        <option value="$PROJECT_DIR$/motion/hand_skin.py" />
         <option value="$PROJECT_DIR$/public/home.html" />
-        <option value="$PROJECT_DIR$/motion/camera.py" />
         <option value="$PROJECT_DIR$/motion/gesture_control.py" />
+        <option value="$PROJECT_DIR$/motion/camera.py" />
+        <option value="$PROJECT_DIR$/motion/hand_skin.py" />
       </list>
     </option>
   </component>
@@ -819,10 +819,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/motion/hand_skin.py">
+    <entry file="file://$PROJECT_DIR$/motion/gesture_control.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-219">
-          <caret line="67" column="32" lean-forward="false" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
+        <state relative-caret-position="267">
+          <caret line="162" column="29" lean-forward="false" selection-start-line="162" selection-start-column="29" selection-end-line="162" selection-end-column="29" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -831,18 +831,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/motion/camera.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="47" column="19" lean-forward="false" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="19" />
+        <state relative-caret-position="194">
+          <caret line="36" column="17" lean-forward="false" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
           <folding>
             <element signature="e#128#138#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/motion/gesture_control.py">
+    <entry file="file://$PROJECT_DIR$/motion/hand_skin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="160" column="40" lean-forward="false" selection-start-line="160" selection-start-column="40" selection-end-line="160" selection-end-column="40" />
+        <state relative-caret-position="130">
+          <caret line="184" column="76" lean-forward="false" selection-start-line="184" selection-start-column="76" selection-end-line="184" selection-end-column="76" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
