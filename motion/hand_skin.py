@@ -109,7 +109,8 @@ class HandSkin(object):
 
     def notify_with_image(self, frame):
         if self.socketIO is not None:
-            frame = cv2.imencode('.jpeg', frame)[1]
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
+            frame = cv2.imencode('.jpeg', frame, encode_param)[1]
             frame = bytearray(frame)
             frame = str(base64.b64encode(frame))
             frame = str(frame.encode('utf-8'))
