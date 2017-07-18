@@ -157,6 +157,8 @@ class GestureControl(object):
                 pass
 
     def run(self):
+        print("is_cam_open")
+        print(self.camera.is_cam_open())
         while self.camera.is_cam_open():
             self.camera.get_frame()
             self.hand_skin.socketIO = self.socketIO

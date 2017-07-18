@@ -5,6 +5,7 @@
 #from picamera.array import PiRGBArray
 
 import cv2
+import time
 
 ESC = 27
 
@@ -16,8 +17,10 @@ class Camera(object):
         self.frame = None
         self.width = width
         self.height = height
+        print("is_picamera")
 
         if is_picamera:
+            time.sleep(0.1)
             self.camera = PiCamera()
             self.camera.resolution = (self.width, self.height)
             self.camera.framerate = 32
