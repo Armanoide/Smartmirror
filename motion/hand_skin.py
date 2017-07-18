@@ -107,6 +107,13 @@ class HandSkin(object):
             json = {"status": str(self.status)}
             self.socketIO.emit('set_status', json)
 
+    def notify_with_image(self, frame):
+        if self.socketIO is not None:
+            frame = cv2.imencode('.jpeg', frame)[1]
+            frame = bytearray(frame)
+            frame = str(base64.encodestring(frame))
+            self.socketIO.emit('set_hsv_img', {'hsv_img': str(frame.encode('utf-8'))})
+
     def set_debug(self, debug):
         self.debug_mode = debug
         if debug:
@@ -183,12 +190,8 @@ class HandSkin(object):
         if self.status is HandSkinStatus.STANDBY:
             if self.debug_mode:
                 cv2.circle(frame, (int(self.width / 2), int(self.height / 2)), 2, [0, 0, 255], 2)
+                self.notify_with_image(frame)
                 #cv2.imshow("mask_hsv", frame)
-                if self.socketIO is not None:
-                    str_mask_hsv = cv2.imencode('.jpeg', frame)[1]
-                    str_mask_hsv = base64.encodestring(str_mask_hsv)
-                    self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
-
             return
 
         if self.status is HandSkinStatus.RECORDING and now - self.last_update > 5:
@@ -206,19 +209,16 @@ class HandSkin(object):
             self.v_max = self.hvs_skin_color[2] + 25
 
             if self.debug_mode:
-                cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
+                cv2.circle(frame, (int(self.width / 2), int(self.height / 2)), 2, [0, 0, 255], 2)
                 #cv2.imshow("mask_hsv", frame)
             return
 
         if self.status is HandSkinStatus.RECORDING:
             self.stock_record_skin.append(color)
             if self.debug_mode:
-                cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
+                cv2.circle(frame, (int(self.width / 2), int(self.height / 2)), 2, [0, 0, 255], 2)
+                self.notify_with_image(frame)
                 #cv2.imshow("mask_hsv", frame)
-                if self.socketIO is not None:
-                    str_mask_hsv = cv2.imencode('.jpeg', frame)[1]
-                    str_mask_hsv = base64.encodestring(str_mask_hsv)
-                    self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
 
             return
 
@@ -226,14 +226,11 @@ class HandSkin(object):
         mask_hsv = cv2.inRange(hsv,
                                np.array([self.h_min, self.s_min, self.v_min]),
                                np.array([self.h_max, self.s_max, self.v_max]))
-        cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
+        cv2.circle(frame, (int(self.width / 2), int(self.height / 2)), 2, [0, 0, 255], 2)
         if self.debug_mode:
             #cv2.imshow("frame frame", frame)
             #cv2.imshow("mask_hsv", mask_hsv)
-            if self.socketIO is not None:
-                str_mask_hsv = cv2.imencode('.jpeg', mask_hsv)[1]
-                str_mask_hsv = base64.encodestring(str_mask_hsv)
-                self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
+            self.notify_with_image(mask_hsv)
 
         # Improve morphology with dilation and erode
         dilation_1 = cv2.dilate(mask_hsv, self.kernel_ellipse_small, iterations=1)
