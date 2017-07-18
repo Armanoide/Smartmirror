@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 from enum import Enum
+import base64
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -102,7 +103,7 @@ class HandSkin(object):
         self.frame = frame.copy()
 
     def notify_status_changed(self):
-        if self.socketIO is not None :
+        if self.socketIO is not None:
             json = {"status": str(self.status)}
             self.socketIO.emit('set_status', json)
 
@@ -157,7 +158,8 @@ class HandSkin(object):
         im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         self.stock_record_skin = []
         if self.debug_mode:
-            cv2.imshow('waiting_user', frame)
+            pass
+            #cv2.imshow('waiting_user', frame)
         print("waiting_user")
         print(len(contours))
         if len(contours) > 900:
@@ -181,7 +183,12 @@ class HandSkin(object):
         if self.status is HandSkinStatus.STANDBY:
             if self.debug_mode:
                 cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
-                cv2.imshow("mask_hsv", frame)
+                #cv2.imshow("mask_hsv", frame)
+                if self.socketIO is not None:
+                    str_mask_hsv = cv2.imencode('.jpeg', frame)[1]
+                    str_mask_hsv = base64.encodestring(str_mask_hsv)
+                    self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
+
             return
 
         if self.status is HandSkinStatus.RECORDING and now - self.last_update > 5:
@@ -200,14 +207,19 @@ class HandSkin(object):
 
             if self.debug_mode:
                 cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
-                cv2.imshow("mask_hsv", frame)
+                #cv2.imshow("mask_hsv", frame)
             return
 
         if self.status is HandSkinStatus.RECORDING:
             self.stock_record_skin.append(color)
             if self.debug_mode:
                 cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
-                cv2.imshow("mask_hsv", frame)
+                #cv2.imshow("mask_hsv", frame)
+                if self.socketIO is not None:
+                    str_mask_hsv = cv2.imencode('.jpeg', frame)[1]
+                    str_mask_hsv = base64.encodestring(str_mask_hsv)
+                    self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
+
             return
 
         # Get skin color
@@ -216,38 +228,49 @@ class HandSkin(object):
                                np.array([self.h_max, self.s_max, self.v_max]))
         cv2.circle(frame, (self.width / 2, self.height / 2), 2, [0, 0, 255], 2)
         if self.debug_mode:
-            cv2.imshow("frame frame", frame)
-            cv2.imshow("mask_hsv", mask_hsv)
+            #cv2.imshow("frame frame", frame)
+            #cv2.imshow("mask_hsv", mask_hsv)
+            if self.socketIO is not None:
+                str_mask_hsv = cv2.imencode('.jpeg', mask_hsv)[1]
+                str_mask_hsv = base64.encodestring(str_mask_hsv)
+                self.socketIO.emit('set_hsv_img', {'hsv_img': str_mask_hsv.encode('utf-8')})
 
         # Improve morphology with dilation and erode
         dilation_1 = cv2.dilate(mask_hsv, self.kernel_ellipse_small, iterations=1)
         if self.debug_mode:
-            cv2.imshow("dilation_1", dilation_1)
+            #cv2.imshow("dilation_1", dilation_1)
+            pass
 
         erosion_1 = cv2.erode(dilation_1, self.kernel_square, iterations=1)
         if self.debug_mode:
-            cv2.imshow("erosion_1", erosion_1)
+            #cv2.imshow("erosion_1", erosion_1)
+            pass
 
         dilation_2 = cv2.dilate(erosion_1, self.kernel_ellipse_small, iterations=1)
         if self.debug_mode:
-            cv2.imshow("dilation_2", dilation_2)
+            #cv2.imshow("dilation_2", dilation_2)
+            pass
 
         clean_noise_1 = cv2.medianBlur(dilation_2, 5)
         if self.debug_mode:
-            cv2.imshow("clean_noise_1", clean_noise_1)
+            #cv2.imshow("clean_noise_1", clean_noise_1)
+            pass
 
         dilation_3 = cv2.dilate(clean_noise_1, self.kernel_ellipse_big, iterations=1)
         if self.debug_mode:
-            cv2.imshow("dilation_3", dilation_3)
+            #cv2.imshow("dilation_3", dilation_3)
+            pass
 
         dilation_4 = cv2.dilate(dilation_3, self.kernel_ellipse_small, iterations=1)
         if self.debug_mode:
-            cv2.imshow("dilation_4", dilation_4)
+            #cv2.imshow("dilation_4", dilation_4)
+            pass
         # Remove noise
 
         clean_noise_2 = cv2.medianBlur(dilation_3, 21)
         if self.debug_mode:
-            cv2.imshow("clean_noise_2", clean_noise_2)
+            #cv2.imshow("clean_noise_2", clean_noise_2)
+            pass
 
         self.detect_palm_and_finger(clean_noise_2)
 
@@ -272,7 +295,8 @@ class HandSkin(object):
         original = self.frame.copy()
         ret, thresh = cv2.threshold(frame, 127, 255, 0)
         if self.debug_mode:
-            cv2.imshow('thresh', thresh)
+            #cv2.imshow('thresh', thresh)
+            pass
 
         im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         # extract large contour
@@ -321,13 +345,6 @@ class HandSkin(object):
                     cv2.circle(original, far, 5, [255, 153, 51], 3)
                     self.count_circle_convex += 1
 
-                if self.last_count_circle_convex is not self.count_circle_convex:
-                    if self.socketIO is not None:
-                        self.last_count_circle_convex = self.count_circle_convex
-                        json = {'count_circle_convex': str(self.count_circle_convex)}
-                        self.socketIO.emit('set_count_circle_convex', json)
-
-
                 hull = cv2.convexHull(cnt, returnPoints=True)
                 nb_fingers = len(hull) - 2
                 # print(nb_fingers)
@@ -338,5 +355,13 @@ class HandSkin(object):
                     cv2.circle(original, coord, 5, [45, 255, 45], -1)
                     cv2.circle(original, coord, 8, [102, 44, 245], -1)
                     cv2.putText(original, 'finger' + str(i), coord, font, 0.5, (255, 255, 255), 2)
+
+            if self.last_count_circle_convex is not self.count_circle_convex:
+                if self.socketIO is not None:
+                    self.last_count_circle_convex = self.count_circle_convex
+                    json = {'count_circle_convex': str(self.count_circle_convex)}
+                    self.socketIO.emit('set_count_circle_convex', json)
+
         if self.debug_mode:
-            cv2.imshow("display_contour_debug", original)
+            #cv2.imshow("display_contour_debug", original)
+            pass

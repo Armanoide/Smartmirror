@@ -54,7 +54,7 @@
     <button class="cn-button" id="cn-button">Menu</button>
     <div class="cn-wrapper" id="cn-wrapper" position="-1">
         <ul>
-            <li><a href="#" onclick="display_weather()"><span>Météo</span></a></li>
+            <li><a href="#"><span>Météo</span></a></li>
             <li><a href="#"><span>Actualité</span></a></li>
             <li><a href="#"><span>Articles</span></a></li>
             <li><a href="#"><span>Snippets</span></a></li>
@@ -74,9 +74,7 @@
     var gesture;
     var state;
     var menu;
-    // like weather ...
-    var appRunning = null;
-    var isAvaiableForGesture = true
+
     display_status_off();
     $(document).ready(function() {
         clock = $('.clock').FlipClock({
@@ -111,7 +109,7 @@
 
                 console.log(value);
 
-                if (!appRunning && gesture.position_hand_vertical
+                if (gesture.position_hand_vertical
                     && gesture.position_hand_vertical === "UP"
                     && animationMenuEnd === true) {
                     animationMenuEnd = false;
@@ -122,27 +120,15 @@
                 }
 
 
-                if (appRunning && gesture.position_hand_vertical
-                    && gesture.position_hand_vertical === "UP") {
-                    display_status_off();
-                    display_status_in_use();
-                    appRunning = null;
-                }
-
-                if (state.type === "IN_USE" && menu.isOpen === true && isAvaiableForGesture === true) {
-
-                    isAvaiableForGesture = false;
-
-                    setTimeout(function(){
-                        isAvaiableForGesture = true;
-                    }, 1000);
-
+                if (state.type === "IN_USE" && menu.isOpen === true) {
 
                     var lastPosition =   parseInt($("#cn-wrapper").attr("position"));
 
-                    if (gesture.count_circle_convex >= 3) {
-                        console.log("selection nb " + lastPosition);
-                        $("#cn-wrapper li:nth-child("+lastPosition+") a").click();
+                    if (gesture.count_circle_convex >= 4) {
+                        console.log("selection");
+                        if (lastPosition === 1){
+                            display_weather();
+                        }
                     }
 
                     if (gesture.count_circle_convex > 2) {
@@ -176,7 +162,6 @@
 
                     $("#cn-wrapper li:nth-child("+lastPosition+")").addClass('hover');
                     $("#cn-wrapper").attr('position', lastPosition);
-
                 }
 
 
@@ -236,6 +221,19 @@
     function display_status_in_use() {
         display_status_off();
         $('#cn-button').show();
+
+        /*if (menuOpen === true && position_hand_vertical
+         && position_hand_vertical === "GestureDirectionVertical.DOWN"
+         && animationMenuEnd === true) {
+         $("#cn-button").click();
+         animationMenuEnd = false;
+         setTimeout(function () {
+         animationMenuEnd = true;
+         }, 1000)
+
+         }*/
+
+
     }
 
     function display_no_connection() {
@@ -249,10 +247,11 @@
     }
 
     function display_weather() {
-        appRunning = "weather";
         display_status_off();
-        menu.close();
-        $("#weather").show();
+//        if (menuOpen){
+//            $("#cn-wrapper").click();
+//        }
+//        $("#weather").show();
     }
 
 

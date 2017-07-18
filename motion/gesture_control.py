@@ -31,8 +31,8 @@ class GestureControl(object):
     def __init__(self):
         print(cv2.__version__)
         self.DEBUG = True
-        self.width = 800
-        self.height = 800
+        self.width = 600
+        self.height = 600
         self.socketIO = None
 
         self.cap = cv2.VideoCapture(1)  # 1 or 0
@@ -82,7 +82,7 @@ class GestureControl(object):
 
     def get_gesture(self):
         now = float(time.time())
-        if now - self.last_update_detect_gesture > 0.5:
+        if now - self.last_update_detect_gesture > 1:
             self.last_update_detect_gesture = now
             v = self.get_average_gesture(
                     self.recording_gesture_horizontal,
@@ -134,9 +134,9 @@ class GestureControl(object):
                 self.position_hand_vertical = GestureDirectionVertical.DOWN
             #if current_center_y >= self.height/2 and current_center_y <= self.height/2 + self.height/4:
             #    self.position_hand_vertical = GestureDirectionVertical.DOWN_MIDDLE
-            if current_center_y <= self.height/4:
-                self.position_hand_vertical = GestureDirectionVertical.UP_MIDDLE
             if current_center_y <= self.height/2:
+                self.position_hand_vertical = GestureDirectionVertical.UP_MIDDLE
+            if current_center_y <= self.height/4:
                 self.position_hand_vertical = GestureDirectionVertical.UP
 
             if last_center_y > current_center_y:

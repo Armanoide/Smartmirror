@@ -48,6 +48,39 @@ body {
 	top:10px;
 	color: red;
 }
+
+#img-debug {
+	height: 100%;
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#weather {
+	margin: 200px auto auto auto;
+	width: 500px;
+	height: 300px;
+}
+
+#weather-temp {
+	margin-top: 80px;
+	font-size: 88px;
+	margin-bottom: 20px;
+}
+
+#weather-panel {
+	font-family: Quicksand-Light, sans-serif;
+	width: 300px;
+	background-color: rgba(50,50,50,.54);
+	height:100%;
+	left: 0;
+	display: inline-block;
+}
+
 #unlock-message {
 	font-family: Quicksand-Light, sans-serif;
 	margin-top: 200px;
