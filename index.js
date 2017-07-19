@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var request = require('request');
 
 var port = 3000;
 
@@ -14,7 +15,7 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/home.html');
 });
 
-var state  = "OFF";
+var state  = "IN_USE";
 var position_hand_vertical = "";
 var position_hand_horizontal = "";
 var count_circle_convex = 0;
@@ -22,35 +23,7 @@ var hsv_img;
 
 
 // url https://api.weather.com/v2/turbo/vt1observation?apiKey=d522aa97197fd864d36b418f39ebb323&geocode=48.8126242%2C2.3706434&units=m&language=fr-FR&format=json
-var fakeDataWeather = {
-    "id": "48.8126242,2.3706434",
-    "vt1observation":
-        {
-            "altimeter":1016.26,
-            "barometerTrend":"En baisse",
-            "barometerCode":2,
-            "barometerChange":-0.68,
-            "dewPoint":16,
-            "feelsLike":21,
-            "gust":null,
-            "humidity":72,
-            "icon":32,
-            "observationTime":"2017-07-18T07:58:40+0200",
-            "obsQualifierCode":null,
-            "obsQualifierSeverity":null,
-            "phrase":"Ensoleillé",
-            "precip24Hour":0.0,
-            "snowDepth":0.0,
-            "temperature":21,
-            "temperatureMaxSince7am":21,
-            "uvIndex":0,
-            "uvDescription":"Faible",
-            "visibility":16.09,
-            "windSpeed":10,
-            "windDirCompass":"NE",
-            "windDirDegrees":40
-        }
-};
+
 
 io.on('connection', function (socket) {
 
@@ -73,7 +46,7 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('state', {'state': state  });
     });
 
-       socket.on('get_state', function () {
+    socket.on('get_state', function () {
         socket.emit({'state': state });
     });
 
@@ -97,7 +70,37 @@ io.on('connection', function (socket) {
 
 
     socket.on('get_weather', function () {
-        socket.emit('weather', fakeDataWeather);
+
+        request('http://164.132.226.172:8080/api/v1/users/me/weather', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                socket.emit('weather', body);
+            } else {
+
+            }
+        });
+    });
+
+    socket.on('get_news', function () {
+
+        request('https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=637c55c4fcbc41b683758dac200bc450&category=technology', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                socket.emit('news', body);
+            } else {
+
+            }
+        })
+
+    });
+
+    socket.on('get_me', function () {
+
+        request('http://164.132.226.172:8080/api/v1/users/me', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                socket.emit('user', body);
+            } else {
+
+            }
+        });
     });
 
 });

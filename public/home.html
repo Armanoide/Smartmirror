@@ -5,254 +5,111 @@
     <link rel="stylesheet" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
 
-    <script src="js/jquery-2.2.1.min.js" type="text/javascript"></script>
-    <script src="js/socket.io-2.0.3.min.js" type="text/javascript"></script>
+    <script src="js/libs/jquery-2.2.1.min.js" type="text/javascript"></script>
+    <script src="js/libs/jquery.easing.min.js" type="text/javascript"></script>
+    <script src="js/libs/socket.io-2.0.3.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="./css/flipclock.css">
-    <script src="./js/flipclock.min.js"></script>
-    <script src="./js/modernizr.2.6.2.min.js"></script>
-    <script src="./js/polyfills.js"></script>
+    <script src="js/libs/flipclock.min.js"></script>
+    <script src="js/libs/moment.js"></script>
+    <script src="js/libs/modernizr.2.6.2.min.js"></script>
+    <script src="js/libs/polyfills.js"></script>
+    <script src="js/libs/sly.min.js"></script>
     <script src="./js/gesture.js"></script>
     <script src="js/state.js"></script>
     <script src="./js/menu-manager.js"></script>
+    <script src="./js/news.js"></script>
+    <script src="./js/weather.js"></script>
+    <script src="./js/user.js"></script>
 </head>
 
 <body>
-<img id="img-debug" >
-</img>
-<div class="component">
+<img id="img-debug" />
+<div class="wrap">
+    <div class="component">
 
-    <div class="debug">
-        <p id="debug_position_hand_vertical"></p>
-        <p id="debug_position_hand_horizontal"></p>
-        <p id="debug_count_circle_convex"></p>
-    </div>
-
-    <div id="wrapper-clock">
-        <div class="clock"></div>
-    </div>
-
-    <p id="welcome-message">Hi !</p>
-    <p id="unlock-message">pass your hand to unlock</p>
-
-    <img id="no-connection" src="./img/icon_no_connection.png" width="128" height="128" />
-
-    <div id="wrapper-hand">
-        <img id="hand-red" src="./img/hand_mask_red.png" width="320" height="240" />
-        <div class="circle" style="display: none"></div>
-        <div class="circle1" style="display: none"></div>
-    </div>
-
-
-    <div id="weather">
-        <div id="weather-panel">
-            <p id="weather-temp">21</p>
-            <p id="weather-phrase">Ensoleillé</p>
+        <div class="debug">
+            <p id="debug_position_hand_vertical"></p>
+            <p id="debug_position_hand_horizontal"></p>
+            <p id="debug_count_circle_convex"></p>
         </div>
-    </div>
 
-    <!-- Start Nav Structure -->
-    <button class="cn-button" id="cn-button">Menu</button>
-    <div class="cn-wrapper" id="cn-wrapper" position="-1">
-        <ul>
-            <li><a href="#" onclick="display_weather()"><span>Météo</span></a></li>
-            <li><a href="#"><span>Actualité</span></a></li>
-            <li><a href="#"><span>Articles</span></a></li>
-            <li><a href="#"><span>Snippets</span></a></li>
-            <li><a href="#"><span>Plugins</span></a></li>
-            <li><a href="#"><span>Contact</span></a></li>
-            <li><a href="#"><span>Follow</span></a></li>
-        </ul>
+        <div id="wrapper-clock">
+            <div class="clock"></div>
+        </div>
+
+        <p id="welcome-message">Hi !</p>
+        <p id="unlock-message">pass your hand to unlock</p>
+
+        <img id="no-connection" src="./img/icon_no_connection.png" width="128" height="128" />
+
+        <div id="wrapper-hand">
+            <img id="hand-red" src="./img/hand_mask_red.png" width="320" height="240" />
+            <div class="circle" style="display: none"></div>
+            <div class="circle1" style="display: none"></div>
+        </div>
+
+
+        <div id="weather">
+            <div id="weather-panel">
+                <p id="weather-temp">-</p>
+                <p id="weather-phrase">-</p>
+            </div>
+        </div>
+
+        <div id="my_info">
+            <div class="card">
+                <div class="container">
+                    <p id="my-info-name">-</p>
+                    <p class="title">Ville</p>
+                    <p id="my-city">-</p>
+                    <p class="title">Localisation</p>
+                    <p id="my-location">-</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="news" class="frame">
+            <div class="frame" id="news-frame">
+                <ul>
+                    <!--
+                    exemple model
+                    <li>
+                        <div class="news-photo">
+                            <img src="http://i.dailymail.co.uk/i/pix/2017/07/19/18/427E5C7700000578-0-image-a-27_1500485420383.jpg">
+                        </div>
+                        <div class="news-text">
+                            <h1 class="news-title">Trump to GOP senators: 'Inaction is not an option'</h1>
+                            <p class="news-description">"President Donald Trump asked Republican senators not to leave town for their August recess without passing a health care reform plan that makes good on seven years of promises to repeal and replace President Barack Obama's Affordable Care Act."</p>
+                            <p class="news-time">10 avi</p>
+                        </div>
+                    </li>
+                    <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li>
+                    <li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li>
+                    <li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li>
+                    <li>28</li><li>29</li>
+                    -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Start Nav Structure -->
+        <button class="cn-button" id="cn-button">Menu</button>
+        <div class="cn-wrapper" id="cn-wrapper" position="-1">
+            <ul>
+                <li><a href="#" onclick="display_weather()"><span>Météo</span></a></li>
+                <li><a href="#" onclick="display_news()"><span>Actualité</span></a></li>
+                <li><a href="#"><span>Articles</span></a></li>
+                <li><a href="#"><span>-</span></a></li>
+                <li><a href="#"><span>-</span></a></li>
+                <li><a href="#"><span>-</span></a></li>
+                <li><a href="#" onclick="display_my_info()"><span>Mes infos</span></a></li>
+            </ul>
+        </div>
+        <!-- End of Nav Structure -->
     </div>
-    <!-- End of Nav Structure -->
+    <script src="js/os-enum.js"></script>
 </div>
 
-
-<script type="text/javascript">
-    var clock;
-    var animationMenuEnd = true;
-    var socket;
-    var gesture;
-    var state;
-    var menu;
-    // like weather ...
-    var appRunning = null;
-    var isAvaiableForGesture = true
-    display_status_off();
-    $(document).ready(function() {
-        clock = $('.clock').FlipClock({
-            clockFace: 'TwentyFourHourClock'
-        });
-
-        //display_status_in_use();
-        socket = io('http://localhost:3000', {transport:['websocket']});
-        menu = new MenuManager();
-        // if server connected and accept
-        socket.on('connect', function(){
-
-            gesture = new Gesture(socket);
-            state = new State(socket);
-            bind()
-
-        });
-        socket.on('disconnect', function(){ display_no_connection(); });
-        // if server is disconnected displa it
-
-        socket.on('hsv_img', function (data) {
-            var b64 = "data:image/jpeg;base64," + data.hsv_img;
-            $('#img-debug').attr('src', b64);
-        });
-
-        function bind() {
-
-            gesture.on(function (type, value) {
-
-                console.log(value);
-
-                if (!appRunning && gesture.position_hand_vertical
-                    && gesture.position_hand_vertical === "UP"
-                    && animationMenuEnd === true) {
-                    animationMenuEnd = false;
-                    $("#cn-button").click();
-                    setTimeout(function () {
-                        animationMenuEnd = true;
-                    }, 2000);
-                }
-
-
-                if (appRunning && gesture.position_hand_vertical
-                    && gesture.position_hand_vertical === "UP") {
-                    display_status_off();
-                    display_status_in_use();
-                    appRunning = null;
-                }
-
-                if (state.type === "IN_USE" && menu.isOpen === true && isAvaiableForGesture === true) {
-
-                    isAvaiableForGesture = false;
-
-                    setTimeout(function(){
-                        isAvaiableForGesture = true;
-                    }, 1000);
-
-
-                    var lastPosition =   parseInt($("#cn-wrapper").attr("position"));
-
-                    if (gesture.count_circle_convex >= 3) {
-                        console.log("selection nb " + lastPosition);
-                        $("#cn-wrapper li:nth-child("+lastPosition+") a").click();
-                    }
-
-                    if (gesture.count_circle_convex > 2) {
-                        return
-                    }
-
-                    if (lastPosition === -1) {
-                        lastPosition = 1;
-                    }
-                    console.log("lastPosition");
-                    console.log(lastPosition);
-
-                    if (gesture.position_hand_horizontal === "LEFT") {
-                        lastPosition--;
-                    }
-                    if (gesture.position_hand_horizontal === "RIGHT") {
-                        lastPosition++;
-                    }
-                    if (lastPosition <= 0) {
-                        lastPosition = 1;
-                    }
-                    if (lastPosition > $("#cn-wrapper li").length) {
-                        lastPosition = $("#cn-wrapper li").length
-                    }
-                    console.log("after eval lastPosition");
-                    console.log(lastPosition);
-
-                    $("#cn-wrapper li").each(function(){
-                        $(this).removeClass('hover');
-                    });
-
-                    $("#cn-wrapper li:nth-child("+lastPosition+")").addClass('hover');
-                    $("#cn-wrapper").attr('position', lastPosition);
-
-                }
-
-
-            });
-
-
-
-            state.on(function (type) {
-                if (type === "OFF") {
-                    display_status_off();
-                }
-                if (type === "STANDBY"){
-                    display_status_standby();
-                }
-                if (type === "RECORDING"){
-                    display_status_recording();
-                }
-                if (type === "DETECTION") {
-                    display_status_recording();
-                }
-                if (type === "IN_USE") {
-                    display_status_in_use();
-                }
-
-            });
-        }
-    });
-
-
-
-    function display_status_off() {
-        $('#hand-red').hide();
-        $('.circle1').hide();
-        $('.circle').hide();
-        $('#welcome-message').hide();
-        $('#unlock-message').hide();
-        $('#no-connection').hide();
-        $('#cn-button').hide();
-        $('#weather').hide();
-    }
-
-    function display_status_standby() {
-        display_status_off();
-        $('#hand-red').show();
-        $('#welcome-message').show();
-        $('#unlock-message').show();
-        $('#no-connection').hide();
-    }
-
-    function display_status_recording() {
-        display_status_off();
-        $('.circle1').show();
-        $('.circle').show();
-        $('#welcome-message').show();
-    }
-
-    function display_status_in_use() {
-        display_status_off();
-        $('#cn-button').show();
-    }
-
-    function display_no_connection() {
-        $('#no-connection').show();
-        $('#hand-red').hide();
-        $('.circle1').hide();
-        $('.circle').hide();
-        $('#welcome-message').hide();
-        $('#unlock-message').hide();
-        $('#cn-button').hide();
-    }
-
-    function display_weather() {
-        appRunning = "weather";
-        display_status_off();
-        menu.close();
-        $("#weather").show();
-    }
-
-
-</script>
 </body>
 </html>
